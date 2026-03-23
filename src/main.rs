@@ -1,3 +1,4 @@
+use avian3d::prelude::*;
 use bevy::prelude::*;
 
 #[path = "game/player/player.rs"]
@@ -14,7 +15,8 @@ impl ColorLight{
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins) //
+        .add_plugins(DefaultPlugins)
+        .add_plugins(PhysicsPlugins::default())
         .add_systems(Startup, setup)
         .add_systems(Startup, spawn_player)
         .add_systems(Update, player::player_movement_system)
@@ -28,9 +30,10 @@ fn setup(
     
 ){ 
     commands.spawn((
-        Mesh3d(meshes.add(Circle::new(4.0))),
+        RigidBody::Static,
+        Collider::cylinder(10.0, 0.1),
+        Mesh3d(meshes.add(Cylinder::new(10.0, 0.1))),
         MeshMaterial3d(materials.add(Color::WHITE)),
-        Transform::from_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
     ));
 
     commands.spawn((
